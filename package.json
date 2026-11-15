@@ -1,0 +1,7 @@
+{
+  "name": "cinder-yard",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Cinder Yard - a round-based tactical FPS in three.js, single player against bots"
+}
