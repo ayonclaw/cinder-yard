@@ -110,6 +110,7 @@ export class Hud {
     }
   }
 
+  // The crosshair gap follows bloom, so the reticle tells the player when to stop and aim.
   setCrosshairSpread(spread) {
     if (!this.el.crosshair) return;
     const gap = 6 + Math.min(26, spread * 220);
@@ -195,6 +196,7 @@ export class Hud {
       ctx.fill();
     }
 
+    // The player is a triangle pointing the way the camera looks.
     const [px, pz] = toScreen(player.position.x, player.position.z);
     ctx.save();
     ctx.translate(px, pz);

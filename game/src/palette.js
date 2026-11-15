@@ -27,6 +27,7 @@ function canvas(size) {
   return c;
 }
 
+// Draw once into a canvas, wrap it as a repeating texture: the whole texturing pipeline.
 function texture(draw, { size = 512, repeat = [1, 1] } = {}) {
   const c = canvas(size);
   const ctx = c.getContext('2d');
@@ -110,6 +111,7 @@ function corrugatedTexture(base) {
   return texture((ctx, size) => {
     ctx.fillStyle = base;
     ctx.fillRect(0, 0, size, size);
+    // The rib profile: dark edge, lit shoulder, soft shadow, dark edge again.
     const ribs = 22;
     const width = size / ribs;
     for (let i = 0; i < ribs; i += 1) {
@@ -161,6 +163,7 @@ function hazardTexture() {
     ctx.fillStyle = '#d7a53c';
     ctx.save();
     ctx.translate(0, 0);
+    // Diagonal hazard stripes: parallelograms across the tile.
     for (let i = -size; i < size * 2; i += 48) {
       ctx.beginPath();
       ctx.moveTo(i, 0);

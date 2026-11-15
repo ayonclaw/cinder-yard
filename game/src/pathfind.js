@@ -3,6 +3,7 @@
 
 import { GRID, isWalkable, tileToWorld, worldToTile, segmentBlocked } from './world.js';
 
+// Eight-way moves; the diagonal entries cost sqrt(2) so the frontier is not biased to the axes.
 const DIRS = [
   [1, 0, 1], [-1, 0, 1], [0, 1, 1], [0, -1, 1],
   [1, 1, 1.4142], [1, -1, 1.4142], [-1, 1, 1.4142], [-1, -1, 1.4142],
@@ -23,6 +24,7 @@ export function findPath(from, to) {
   const fScore = new Map([[keyOf(start.row, start.col), Math.hypot(start.row - goal.row, start.col - goal.col)]]);
 
   while (open.length) {
+    // The open set stays tiny (a 24x24 grid), so a linear scan beats carrying a heap.
     let bestIndex = 0;
     let best = Infinity;
     for (let i = 0; i < open.length; i += 1) {
@@ -39,6 +41,7 @@ export function findPath(from, to) {
       const c = col + dc;
       if (r < 0 || c < 0 || r >= GRID || c >= GRID) continue;
       if (!isWalkable(r, c)) continue;
+      // No cutting a diagonal through the corner of a wall.
       if (dr !== 0 && dc !== 0 && (!isWalkable(row + dr, col) || !isWalkable(row, col + dc))) continue;
       const k = keyOf(r, c);
       const tentative = (gScore.get(current) ?? Infinity) + cost;

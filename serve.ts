@@ -38,6 +38,7 @@ createServer((request, response) => {
   }
   if (pathname.endsWith('/')) pathname += 'index.html';
   const file = resolve(join(root, normalize(pathname)));
+  // Nothing outside game/ is ever served, whatever the path looks like.
   if (file !== root && !file.startsWith(root + sep)) {
     response.writeHead(403).end('forbidden');
     return;

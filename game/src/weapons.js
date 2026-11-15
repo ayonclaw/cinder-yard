@@ -171,6 +171,7 @@ export class WeaponState {
       this.reloadTimer -= dt;
       if (this.reloadTimer <= 0) {
         if (this.def.reloadPerShell) {
+          // A shotgun loads one shell at a time and keeps going while rounds remain.
           this.mag = Math.min(this.def.magSize, this.mag + 1);
           this.reserve -= 1;
           if (this.mag < this.def.magSize && this.reserve > 0) this.reloadTimer = this.def.reloadTime;

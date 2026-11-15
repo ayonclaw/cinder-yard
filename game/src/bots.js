@@ -205,6 +205,7 @@ export class Bot {
     if (visible) {
       if (this.target !== visible) {
         this.target = visible;
+        // Reaction time: the bot does not fire the instant it sees you.
         this.reactionTimer = BOTS.reactionMin + Math.random() * (BOTS.reactionMax - BOTS.reactionMin);
       }
       this.lastSeen = { x: visible.position.x, z: visible.position.z };
@@ -374,6 +375,7 @@ export class Bot {
     }
   }
 
+  // Idle head turn, so a bot holding an angle is not a statue.
   scan(dt) {
     this.yaw += Math.sin(performance.now() / 1400 + this.index) * dt * 0.55;
   }
@@ -431,6 +433,7 @@ export class Bot {
     this.mesh.rotation.y = this.yaw;
     const parts = this.mesh.userData.parts;
     if (parts) {
+      // A cheap two-frame leg swing driven by the clock, enough to read as walking.
       const walk = Math.sin(performance.now() / 150 + this.index) * 0.09;
       parts.legs.position.z = walk;
       parts.legR.position.z = -walk;

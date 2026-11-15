@@ -17,6 +17,7 @@ export class Input {
     element.addEventListener('keydown', (event) => {
       if (event.repeat) return;
       const code = event.code;
+      // Keys the browser would otherwise eat: jump, crouch, tab, the buy and objective keys.
       if (['Space', 'ControlLeft', 'Tab', 'KeyB', 'KeyE', 'KeyR', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5'].includes(code)) {
         event.preventDefault();
       }

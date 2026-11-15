@@ -21,6 +21,7 @@ export class Sound {
     this.master = this.ctx.createGain();
     this.master.gain.value = 0.55;
     this.master.connect(this.ctx.destination);
+    // One second of white noise, reused by every noise-based sound.
     const length = Math.floor(this.ctx.sampleRate * 0.5);
     this.noiseBuffer = this.ctx.createBuffer(1, length, this.ctx.sampleRate);
     const data = this.noiseBuffer.getChannelData(0);
@@ -65,6 +66,7 @@ export class Sound {
     osc.stop(now + duration + 0.02);
   }
 
+  // Gunfire falls off with distance so a fight across the yard reads quieter than one beside you.
   shot(weapon, distance = 0) {
     const falloff = Math.max(0.08, 1 - distance / 60);
     this.noise(weapon.heavy ? 0.3 : 0.16, weapon.heavy ? 900 : 1600, (weapon.heavy ? 0.55 : 0.38) * falloff);

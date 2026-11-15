@@ -54,6 +54,11 @@ always produce the same round.
 `WASD` move · mouse look · click fire · `R` reload · `Ctrl` crouch · `Space` jump · `B` buy ·
 `G` grenade · `E` plant or defuse · wheel switch weapon
 
+## Testing it quickly
+
+`node serve.ts --port 8099` and open `http://localhost:8099/?shot=play` to drop straight into a
+staged site-A frame; `screenshots/` holds the same three states the entry ships.
+
 ## License
 
 MIT. See `LICENSE`.

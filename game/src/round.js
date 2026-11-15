@@ -67,6 +67,7 @@ export class Round {
     if (this.matchOver) this.events.push({ type: EVENTS.MATCH_END, winner });
   }
 
+  // The economy: winners take a bigger purse, losers get a consolation that grows with the streak.
   roundReward(winner, reason) {
     const loser = winner === 'attackers' ? 'defenders' : 'attackers';
     const win = reason === 'elimination' ? MONEY.winElimination : MONEY.winBomb;
@@ -104,6 +105,7 @@ export class Round {
       if (this.timeLeft <= 0) {
         if (this.matchOver) return;
         this.round += 1;
+        // Sites alternate each round so the map is read from both ends.
         this.attackingSite = this.round % 2;
         this.begin();
       }
@@ -121,6 +123,7 @@ export class Round {
       }
     }
     if (this.timeLeft <= 0) {
+      // A live bomb outlives the clock: the round is decided by the fuse, not the timer.
       if (this.bomb.state === 'planted') return;
       this.endRound('defenders', 'time');
       return;

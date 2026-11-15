@@ -12,6 +12,7 @@ export function raycastBots(origin, dir, maxDistance, bots, ignoreTeam = null) {
     if (bot.dead || bot.team === ignoreTeam) continue;
     const hit = rayVsBody(origin, dir, bot, maxDistance);
     if (!hit) continue;
+    // A wall in the way stops the shot even if the ray would have reached the body.
     if (segmentBlocked(origin.x, origin.z, hit.point.x, hit.point.z, origin.y)) continue;
     if (!best || hit.distance < best.distance) best = { ...hit, bot };
   }
@@ -51,6 +52,7 @@ function rayVsBody(origin, dir, bot, maxDistance) {
   };
 }
 
+// Ray/sphere, returning the near entry distance (or the exit when the origin is inside).
 export function raySphere(ox, oy, oz, dx, dy, dz, cx, cy, cz, radius, maxDistance) {
   const lx = cx - ox;
   const ly = cy - oy;
@@ -68,6 +70,7 @@ export function raySphere(ox, oy, oz, dx, dy, dz, cx, cy, cz, radius, maxDistanc
   return t <= maxDistance ? t : null;
 }
 
+// Slab test: the near intersection with an axis-aligned box, or null if the ray misses it.
 export function rayBox(ox, oy, oz, dx, dy, dz, minX, minY, minZ, maxX, maxY, maxZ, maxDistance) {
   let tmin = 0;
   let tmax = maxDistance;

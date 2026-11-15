@@ -72,6 +72,7 @@ export class Player {
     if (!this.alive) return;
     const wantCrouch = input.down('ControlLeft') || input.down('KeyC');
     this.crouching = wantCrouch;
+    // Crouch and eye height ease rather than snap, so the camera does not jolt.
     const targetHeight = this.crouching ? PLAYER.crouchHeight : PLAYER.standHeight;
     this.height += (targetHeight - this.height) * Math.min(1, dt * 12);
     const targetEye = this.crouching ? PLAYER.crouchEye : PLAYER.standEye;
@@ -95,6 +96,7 @@ export class Player {
       wishZ /= wishLength;
     }
 
+    // Each weapon caps its own top speed, so a pistol beats a rifle through a doorway.
     const speedCap = (this.crouching ? PLAYER.crouchSpeed : PLAYER.walkSpeed) * (this.weapon?.def?.moveSpeed ?? 1);
     const accel = this.onGround ? PLAYER.accel : PLAYER.airAccel;
     if (wishLength > 1e-4) {

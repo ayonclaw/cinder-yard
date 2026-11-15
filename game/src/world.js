@@ -104,6 +104,7 @@ function makeGrid() {
       }
     }
   }
+  // Props stamp their footprints in last so they are never overwritten by a fill above.
   for (const prop of PROPS) {
     for (let r = prop.row; r < prop.row + prop.rows; r += 1) {
       for (let c = prop.col; c < prop.col + prop.cols; c += 1) {
@@ -175,6 +176,7 @@ function makeColliders() {
       }
     }
   }
+  // Props get their own boxes; a crate run and a container never merge into one.
   for (const prop of PROPS) {
     const { x: cx, z: cz } = tileToWorld(prop.row, prop.col);
     const halfW = (prop.cols * TILE) / 2;
@@ -256,6 +258,7 @@ export function resolveCircle(x, z, radius) {
       px = closestX + (dx / dist) * radius;
       pz = closestZ + (dz / dist) * radius;
     } else {
+      // Centre inside the box: push out along whichever face is nearest.
       const toLeft = px - box.minX;
       const toRight = box.maxX - px;
       const toBack = pz - box.minZ;
@@ -309,6 +312,7 @@ export function buildWorld(scene) {
     scene.add(line);
   }
 
+  // Walls and crates are collected per material, then merged one mesh at a time below.
   const groups = new Map();
   const addBox = (geometry, material, x, y, z) => {
     const key2 = material.uuid;

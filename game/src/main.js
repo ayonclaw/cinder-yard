@@ -71,6 +71,7 @@ class Game {
     this.renderer.setAnimationLoop((time) => this.frame(time));
   }
 
+  // Four a side: the player fills one attacker slot, so three bot Raiders plus four Wardens.
   spawnTeams() {
     for (const bot of this.bots) this.scene.remove(bot.mesh);
     this.bots = [];
@@ -230,6 +231,8 @@ class Game {
     this.player.camera.updateProjectionMatrix();
   }
 
+  // A frame is a fixed number of simulation steps, then one render: the sim never sees a
+  // variable dt, so the same inputs give the same round.
   frame(time) {
     const delta = Math.min(MAX_FRAME, (time - this.lastTime) / 1000);
     this.lastTime = time;
@@ -310,6 +313,7 @@ class Game {
     const weapon = this.player.weapon;
     if (!this.input.fireHeld && !(weapon.def.melee && this.input.firePressed)) return;
     if (!weapon.canFire()) {
+      // Empty trigger: click, then start the reload for them.
       if (this.input.firePressed && weapon.needsReload) {
         this.sound.dryFire();
         weapon.startReload();
@@ -412,6 +416,7 @@ class Game {
     } else {
       this.hud.addFeed(`${shooter.name} eliminated ${victim.name}`, 'neutral');
     }
+    // The bomb changes hands when its carrier dies, and falls to the player if no bot is left.
     if (victim !== this.player && victim.hasBomb) {
       victim.hasBomb = false;
       const nextCarrier = this.bots.find((bot) => bot.team === 'attackers' && bot.alive && bot !== victim);
@@ -434,11 +439,13 @@ class Game {
       this.round.roundReward('defenders', 'elimination');
     } else if (defenders === 0) {
       this.round.roundReward('attackers', 'elimination');
+      // A planted bomb still has to go off: an elimination does not cancel the fuse.
       if (this.round.bomb.state === 'planted') return;
       this.round.endRound('attackers', 'elimination');
     }
   }
 
+  // Death: hand the round over to the team, and only drop pointer lock when nobody is left to watch.
   showDeath() {
     const attackerAlive = this.bots.some((bot) => bot.team === 'attackers' && bot.alive);
     this.hud.showOverlay('You are down', attackerAlive ? 'Your team fights on — watch the round play out.' : 'The round is lost. Next round starts shortly.', attackerAlive ? 'Spectating' : 'Waiting');
@@ -584,6 +591,7 @@ class Game {
 
   updateBombVisual() {
     if (this.round.bomb.state !== 'planted') return;
+    // The light blinks faster as the fuse runs down: the only countdown the bomb itself shows.
     const pulse = 0.5 + 0.5 * Math.sin(performance.now() / (this.round.bomb.timer < 10 ? 90 : 260));
     this.bombMesh.children[1].material.emissiveIntensity = 0.6 + pulse * 1.8;
   }
@@ -684,6 +692,7 @@ class Game {
       this.flashTimer -= dt;
       if (this.flashTimer <= 0 && this.viewModel?.userData.flash) this.viewModel.userData.flash.visible = false;
     }
+    // View-model kick: the gun rides back and up on the axis it is held, then settles.
     const kick = this.viewKick ?? 0;
     if (this.viewModel) {
       const restingZ = -0.42;
