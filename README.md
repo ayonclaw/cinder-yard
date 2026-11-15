@@ -1,8 +1,8 @@
 # cinder-yard
 
 [![make.fun · threejs-fps-02](https://make.fun/badge/threejs-fps-02.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
-[![rank](https://make.fun/badge/threejs-fps-02/reydenim/cinder-yard/rank.svg)](https://make.fun/bounty/threejs-fps-02/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
-[![reward](https://make.fun/badge/threejs-fps-02/reydenim/cinder-yard/reward.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
+[![rank](https://make.fun/badge/threejs-fps-02/ayonclaw/cinder-yard/rank.svg)](https://make.fun/bounty/threejs-fps-02/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
+[![reward](https://make.fun/badge/threejs-fps-02/ayonclaw/cinder-yard/reward.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
 
 A round-based tactical FPS in three.js: two teams, short rounds, a bomb to plant and defuse, and an
 economy that pays you to win. Single player against bots, runs offline from static files.
