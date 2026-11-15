@@ -217,9 +217,11 @@ export class Bot {
 
     // Objective duties outrank a fight only while nothing is visible.
     if (bomb?.state === 'planted' && this.team === 'defenders' && !visible) {
-      this.state = 'defuse';
-      this.path = findPath(this.position, bomb.position);
-      this.pathIndex = 0;
+      if (this.state !== 'defuse') {
+        this.state = 'defuse';
+        this.path = [];
+        this.repathTimer = 0;
+      }
     }
 
     switch (this.state) {
@@ -246,7 +248,7 @@ export class Bot {
     }
 
     this.repathTimer -= dt;
-    this.moveAlongPath(dt);
+    if (this.state !== 'defuse') this.moveAlongPath(dt);
     this.weapon.update(dt);
     if (this.weapon.needsReload && !this.weapon.isReloading) this.weapon.startReload();
     this.syncMesh();
@@ -342,11 +344,17 @@ export class Bot {
     if (!bomb || bomb.state !== 'planted') { this.state = 'push'; return; }
     const distance = Math.hypot(bomb.position.x - this.position.x, bomb.position.z - this.position.z);
     if (distance > 1.5) {
-      this.path = findPath(this.position, bomb.position);
-      this.pathIndex = 0;
-      this.walkTo(bomb.position, dt, 1.2);
+      // Repath on a timer, not every frame: a path recomputed 240 times a second makes the bot
+      // jitter in place and never actually walk anywhere.
+      if (this.repathTimer <= 0 || this.path.length === 0) {
+        this.path = findPath(this.position, bomb.position);
+        this.pathIndex = 0;
+        this.repathTimer = BOTS.repathEvery;
+      }
+      this.moveAlongPath(dt);
       return;
     }
+    this.path = [];
     this.yaw = turnTowards(this.yaw, Math.atan2(-(bomb.position.x - this.position.x), -(bomb.position.z - this.position.z)), dt * 6);
     this.defuseTimer += dt;
     ctx.onDefuseTick?.(this, this.defuseTimer);
@@ -388,7 +396,7 @@ export class Bot {
   }
 
   moveAlongPath(dt) {
-    if (!this.path.length || this.state === 'engage' || this.state === 'plant' || this.state === 'defuse') return;
+    if (!this.path.length || this.state === 'engage' || this.state === 'plant') return;
     const point = this.path[this.pathIndex];
     if (!point) { this.path = []; return; }
     const dx = point.x - this.position.x;

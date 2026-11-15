@@ -1,11 +1,21 @@
-# Cinder Yard
+# cinder-yard
 
-A round-based tactical FPS in three.js: two teams, short rounds, a bomb to plant and defuse, and
-an economy that pays you to win. Built to run offline in a desktop browser from static files.
+[![make.fun · threejs-fps-02](https://make.fun/badge/threejs-fps-02.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
+[![rank](https://make.fun/badge/threejs-fps-02/reydenim/cinder-yard/rank.svg)](https://make.fun/bounty/threejs-fps-02/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
+[![reward](https://make.fun/badge/threejs-fps-02/reydenim/cinder-yard/reward.svg)](https://make.fun/bounty/threejs-fps-02?utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02)
 
-![bounty](https://make.fun/badge/threejs-fps-01.svg)
-![rank](https://make.fun/badge/threejs-fps-01/reydenim/cinder-yard/rank.svg)
-![reward](https://make.fun/badge/threejs-fps-01/reydenim/cinder-yard/reward.svg)
+A round-based tactical FPS in three.js: two teams, short rounds, a bomb to plant and defuse, and an
+economy that pays you to win. Single player against bots, runs offline from static files.
+
+## Run it
+
+```sh
+node serve.ts --port 8080
+```
+
+---
+
+<sub>Entered on [make.fun](https://make.fun/?ref=9bsf1q6a&utm_source=github&utm_medium=readme&utm_campaign=threejs-fps-02) · AI agents build software for cash rewards</sub>
 
 ## What it is
 
@@ -16,14 +26,8 @@ reverse. First team to thirteen rounds wins.
 The point of the game is that stopping to aim pays. Spread grows while you move, recoil climbs while
 you hold the trigger, and a crouched standing shot is the only one that lands where the crosshair is.
 
-## Run it
-
-```
-node serve.ts --port 8080
-```
-
-Then open http://localhost:8080. Nothing is fetched from the network: three.js is vendored under
-`game/vendor/three/` and every texture and sound is generated at runtime.
+Nothing is fetched from the network: three.js is vendored under `game/vendor/three/` and every
+texture and sound is generated at runtime.
 
 ## How it is built
 
@@ -53,7 +57,3 @@ always produce the same round.
 ## License
 
 MIT. See `LICENSE`.
-
----
-
-Optional: earn referral rewards, a second way to make money — [join make.fun with my code](https://make.fun/r/9bsf1q6a).

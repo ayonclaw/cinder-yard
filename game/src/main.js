@@ -353,18 +353,42 @@ class Game {
       this.effects.tracer(origin, end);
       if (hit) {
         const damage = damageFor(def, hit.part, hit.distance, hit.bot.armor > 0);
-        const result = hit.bot.takeDamage(damage, hit.part, origin);
         this.effects.burst(hit.point, hit.part === 'head' ? 8 : 5, true);
-        if (shooter === this.player) {
-          this.hud.hit(hit.part === 'head');
-          this.sound.hit(hit.part === 'head');
+        if (hit.bot === this.player) {
+          // The player is not a Bot: its damage path is its own, with the hurt vignette.
+          this.damagePlayer(damage, shooter);
+        } else {
+          const result = hit.bot.takeDamage(damage, hit.part, origin);
+          if (shooter === this.player) {
+            this.hud.hit(hit.part === 'head');
+            this.sound.hit(hit.part === 'head');
+          }
+          if (result.killed) this.onKill(shooter, hit.bot, def, hit.part);
         }
-        if (result.killed) this.onKill(shooter, hit.bot, def, hit.part);
       } else {
         this.effects.burst(end, 3, false);
       }
     }
     this.effects.muzzle({ x: origin.x, y: origin.y - 0.08, z: origin.z });
+  }
+
+  // Player damage: armour soaks half of it, then health, then the round is told about a death.
+  damagePlayer(amount, from) {
+    if (!this.player.alive) return;
+    let damage = amount;
+    if (this.player.armor > 0) {
+      const absorbed = Math.min(this.player.armor, damage * 0.5);
+      this.player.armor -= absorbed;
+      damage -= absorbed;
+    }
+    this.player.health -= damage;
+    this.hud.hurt(damage);
+    this.sound.hurt();
+    this.shake = Math.min(0.5, this.shake + 0.12);
+    if (this.player.health <= 0) {
+      this.player.health = 0;
+      this.onKill(from ?? this.bots[0], this.player, { name: 'rifle' }, 'chest');
+    }
   }
 
   resolveBotShot(bot, shot, target) {
@@ -388,7 +412,7 @@ class Game {
     } else {
       this.hud.addFeed(`${shooter.name} eliminated ${victim.name}`, 'neutral');
     }
-    if (victim.hasBomb) {
+    if (victim !== this.player && victim.hasBomb) {
       victim.hasBomb = false;
       const nextCarrier = this.bots.find((bot) => bot.team === 'attackers' && bot.alive && bot !== victim);
       if (nextCarrier) {
